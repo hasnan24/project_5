@@ -4,10 +4,20 @@ const moment = require('moment')
 
 const database = require('./database')
 
+router.get('/user',(req,res)=>{
+
+	let sql = 'SELECT id, user_name, user_email FROM data_user '
+	database.query(sql,(err,result)=>{
+		if(err) throw err;
+		res.json(result)
+	})
+
+})
+
 router.get('/user/:username',(req,res)=>{
 
-	let sql = 'SELECT * FROM data_user WHERE username = '+req.params.username
-	database.query(sql,(err,result,fields)=>{
+	let sql = "SELECT * FROM data_user WHERE user_name = ?"
+	database.query(sql,[req.params.username],(err,result)=>{
 		if(err) throw err;
 		res.json(result)
 	})
@@ -32,7 +42,7 @@ router.post('/user-add',(req,res)=>{
 			email,
 			date
 		}
-		
+
 		database.query(sql,[value],(err,result)=>{
 			if (err) throw err;
 			console.log("Successfully Register "+username)
@@ -45,6 +55,7 @@ router.post('/user-add',(req,res)=>{
 })
 
 router.post('/user-edit',(req,res)=>{
+	let id = req.body.id
 	let username = req.body.username
 	let password = req.body.password
 	let status = req.body.status
@@ -52,7 +63,8 @@ router.post('/user-edit',(req,res)=>{
 	let date_update = moment().format('YYYY-M-D H:m:s')
 
 	if (username&&password&&status&&email) {
-		let sql = 'UPDATE data_user SET user_name = '+username+', user_pwd = '+password+', user_status = '+status+', last_update = '+date_update+' WHERE data_user.user_name = '+username
+		let sql = 'UPDATE data_user SET user_name = ?, user_pwd = ?, user_status = ?, user_email = ?, last_update = ? WHERE id = '+id
+		let value = [username,password,status,email,date_update]
 		let update_data = {
 			username,
 			password,
@@ -60,7 +72,7 @@ router.post('/user-edit',(req,res)=>{
 			email,
 			date_update
 		}
-		database.query(sql,(err, result)=>{
+		database.query(sql,value,(err, result)=>{
 		    if (err) throw err;
 		    console.log("Successfully Updated "+username+" Data");
 		    res.json(update_data)
@@ -75,9 +87,9 @@ router.post('/user-delete',(req,res)=>{
 	let username = req.body.username
 
 	if (username) {
-		var sql = 'DELETE FROM user_data WHERE user_name = '+username
-
-		database.query(sql,(err, result)=>{
+		let sql = 'DELETE FROM user_data WHERE user_name = ?'
+		
+		database.query(sql,[username],(err, result)=>{
 		    if (err) throw err;
 		    console.log("Successfully Delete "+username+" Data");
 		    res.send("Successfully Delete "+username+" Data")

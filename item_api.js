@@ -6,7 +6,7 @@ const database = require('./database')
 
 router.get('/item',(req,res)=>{
 
-	let sql = 'SELECT * FROM data_inventory'
+	let sql = 'SELECT id, item_name, item_code FROM data_inventory'
 
 	database.query(sql,(err,result,fields)=>{
 		if(err) throw err;
@@ -58,7 +58,7 @@ router.post('/item-edit',(req,res)=>{
 	let date_update = moment().format('YYYY-M-D H:m:s')
 
 	if(item_name&&item_code&&item_description){
-		let sql = 'UPDATE data_inventory SET item_name = '+item_name+', item_code = '+item_code+', item_description = '+item_description+', last_update = '+date_update+' WHERE data_inventory.id = '+id
+		let sql = 'UPDATE data_inventory SET item_name = ?, item_code = ?, item_description = ?, last_update = ? WHERE id = '+id
 		let update_data = {
 			id,
 			item_name,
@@ -66,7 +66,7 @@ router.post('/item-edit',(req,res)=>{
 			item_description,
 			date_update
 		}
-		database.query(sql,(err, result)=>{
+		database.query(sql,[item_name,item_code,item_description,date_update],(err, result)=>{
 		    if (err) throw err;
 		    console.log("Successfully Updated "+item_name+" Data");
 		    res.json(update_data)
