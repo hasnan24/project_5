@@ -31,7 +31,6 @@ router.post('/user-add',(req,res)=>{
 	let status = req.body.status
 	let email = req.body.email
 	let date = moment().format('YYYY-M-D H:m:s')
-
 	if (username&&password&&status&&email) {
 		let sql = 'INSERT INTO data_user (user_name,user_pwd,user_status,user_email,user_created_at,last_update) VALUES ?'
 		let value = [[username,password,status,email,date,date]]
@@ -49,7 +48,10 @@ router.post('/user-add',(req,res)=>{
 			res.json(json_data)
 		})
 	}else{
-		res.send("<h1>Failed to Post</h1>")
+		let response = {response : "Failed",
+		    			username,
+		    			action : "Register"}
+		res.json(response)
 	}
 
 })
@@ -78,7 +80,10 @@ router.post('/user-edit',(req,res)=>{
 		    res.json(update_data)
 	    });
 	}else{
-		res.send("<h1>Failed to Update</h1>")
+		let response = {response : "Failed",
+		    			username,
+		    			action : "Update"}
+		res.json(response)
 	}
 })
 
@@ -87,15 +92,20 @@ router.post('/user-delete',(req,res)=>{
 	let username = req.body.username
 
 	if (username) {
-		let sql = 'DELETE FROM user_data WHERE user_name = ?'
-		
+		let sql = 'DELETE FROM data_user WHERE user_name = ?'
 		database.query(sql,[username],(err, result)=>{
 		    if (err) throw err;
 		    console.log("Successfully Delete "+username+" Data");
-		    res.send("Successfully Delete "+username+" Data")
+		    let response = {response : "Success",
+		    			username,
+		    			action : "Delete"}
+		    res.json(response)
 		});
 	}else {
-		res.send("<h1>Failed to Delete</h1>")
+		let response = {response : "Failed",
+		    			username,
+		    			action : "Delete"}
+		res.json(response)
 	}
 })
 

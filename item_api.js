@@ -44,7 +44,10 @@ router.post('/item-add',(req,res)=>{
 			res.json(data_json)
 		})
 	}else{
-		res.send("<h1>Failed to Post</h1>")
+		let response = {response : "Failed",
+		    			item_name,
+		    			action : "Add"}
+		res.json(response)
 	}
 
 })
@@ -72,7 +75,10 @@ router.post('/item-edit',(req,res)=>{
 		    res.json(update_data)
 	    });
 	}else{
-		res.send("<h1>Failed to Update</h1>")
+		let response = {response : "Failed",
+		    			username,
+		    			action : "Update"}
+		res.json(response)
 	}
 
 })
@@ -88,10 +94,16 @@ router.post('/item-delete',(req, res)=>{
 		database.query(sql,(err, result)=>{
 			if (err) throw err;
 		    console.log("Successfully Delete");
-		    res.send("Successfully Delete "+result.affectedRows+" Data")
+		    let response = {response : "Success",
+		    			id_item : id,
+		    			action : "Delete"}
+		    res.json(response)
 		});
 	}else {
-		res.send("<h1>Failed to Delete</h1>")
+		let response = {response : "Failed",
+		    			username,
+		    			action : "Delete"}
+		res.json(response)
 	}
 
 })
