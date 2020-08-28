@@ -60,7 +60,7 @@ router.post('/item-edit',(req,res)=>{
 	let item_description = req.body.item_description
 	let date_update = moment().format('YYYY-M-D H:m:s')
 
-	if(item_name&&item_code&&item_description){
+	if(item_name&&item_code&&item_description&&id){
 		let sql = 'UPDATE data_inventory SET item_name = ?, item_code = ?, item_description = ?, last_update = ? WHERE id = '+id
 		let update_data = {
 			id,
@@ -76,7 +76,7 @@ router.post('/item-edit',(req,res)=>{
 	    });
 	}else{
 		let response = {response : "Failed",
-		    			username,
+		    			item_name,
 		    			action : "Update"}
 		res.json(response)
 	}
@@ -101,7 +101,7 @@ router.post('/item-delete',(req, res)=>{
 		});
 	}else {
 		let response = {response : "Failed",
-		    			username,
+		    			id_item : id,
 		    			action : "Delete"}
 		res.json(response)
 	}

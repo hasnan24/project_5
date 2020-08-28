@@ -64,7 +64,7 @@ router.post('/user-edit',(req,res)=>{
 	let email = req.body.email
 	let date_update = moment().format('YYYY-M-D H:m:s')
 
-	if (username&&password&&status&&email) {
+	if (username&&password&&status&&email&&id) {
 		let sql = 'UPDATE data_user SET user_name = ?, user_pwd = ?, user_status = ?, user_email = ?, last_update = ? WHERE id = '+id
 		let value = [username,password,status,email,date_update]
 		let update_data = {
