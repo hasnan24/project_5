@@ -92,23 +92,44 @@ router.post('/user-edit',(req,res)=>{
 	let email = req.body.email
 	let date_update = moment().format('YYYY-M-D H:m:s')
 
-	if (username&&password&&status&&email&&id) {
-		let sql = 'UPDATE data_user SET first_name = ?, last_name = ?, user_name = ?, user_pwd = ?, user_status = ?, user_email = ?, last_update = ? WHERE id = '+id
-		let value = [f_name,l_name,username,password,status,email,date_update]
-		let update_data = {
-			first_name : f_name,
-			last_name : l_name,
-			username,
-			password,
-			status,
-			email,
-			date_update
+	if (f_name&&l_name&&username&&password&&status&&email&&id) {
+		if (validator.isAlpha(f_name)) {
+			if (validator.isAlpha(l_name)) {
+				if (validator.isAlphanumeric(username)) {
+					let sql = 'UPDATE data_user SET first_name = ?, last_name = ?, user_name = ?, user_pwd = ?, user_status = ?, user_email = ?, last_update = ? WHERE id = '+id
+					let value = [f_name,l_name,username,password,status,email,date_update]
+					let update_data = {
+						first_name : f_name,
+						last_name : l_name,
+						username,
+						password,
+						status,
+						email,
+						date_update
+					}
+					database.query(sql,value,(err, result)=>{
+					    if (err) throw err;
+					    console.log("Successfully Updated "+username+" Data");
+					    res.json(update_data)
+				    });
+				}else{
+					let response = {response : "Failed",
+					    			error : "Username Can't input special characters value",
+					    			action : "Register"}
+					res.json(response)
+				}
+			}else {
+				let response = {response : "Failed",
+				    			error : "Last name only can input characters value",
+				    			action : "Register"}
+			 	res.json(response)
+			}
+		}else{
+			let response = {response : "Failed",
+			    			error : "First name only can input characters value",
+			    			action : "Register"}
+			res.json(response)
 		}
-		database.query(sql,value,(err, result)=>{
-		    if (err) throw err;
-		    console.log("Successfully Updated "+username+" Data");
-		    res.json(update_data)
-	    });
 	}else{
 		let response = {response : "Failed",
 		    			Error : "Invalid Input",
