@@ -27,31 +27,49 @@ router.get('/user/:username',(req,res)=>{
 
 router.post('/user-add',(req,res)=>{
 
+	let f_name = req.body.fname
+	let l_name = req.body.lname
 	let username = req.body.username
 	let password = req.body.password
 	let status = req.body.status
 	let email = req.body.email
 	let date = moment().format('YYYY-M-D H:m:s')
-	if (username&&password&&status&&email) {
-		if (validator.isAlphanumeric(username)) {
-			let sql = 'INSERT INTO data_user (user_name,user_pwd,user_status,user_email,user_created_at,last_update) VALUES ?'
-			let value = [[username,password,status,email,date,date]]
-			let json_data = {
-				username,
-				password,
-				status,
-				email,
-				date
-			}
+	if (f_name&&l_name&&username&&password&&status&&email) {
+		if (validator.isAlpha(f_name)) {
+			if (validator.isAlpha(l_name)) {
+				if (validator.isAlphanumeric(username)) {
+					let sql = 'INSERT INTO data_user (first_name,last_name,user_name,user_pwd,user_status,user_email,user_created_at,last_update) VALUES ?'
+					let value = [[f_name,l_name,username,password,status,email,date,date]]
+					let json_data = {
+						first_name : f_name,
+						last_name : l_name,
+						username,
+						password,
+						status,
+						email,
+						date
+					}
 
-			database.query(sql,[value],(err,result)=>{
-				if (err) throw err;
-				console.log("Successfully Register "+username)
-				res.json(json_data)
-			})
+					database.query(sql,[value],(err,result)=>{
+						if (err) throw err;
+						console.log("Successfully Register "+username)
+						res.json(json_data)
+					})
+				}else{
+					let response = {response : "Failed",
+			    			error : "Username Can't input special characters",
+			    			action : "Register"}
+					res.json(response)
+				}
+			}else {
+				let response = {response : "Failed",
+			    			error : "Last name only can input characters value",
+			    			action : "Register"}
+			 	res.json(response)
+			}
 		}else{
 			let response = {response : "Failed",
-			    			error : "Username Can't input special characters",
+			    			error : "First name only can input characters value",
 			    			action : "Register"}
 			res.json(response)
 		}
@@ -66,6 +84,8 @@ router.post('/user-add',(req,res)=>{
 
 router.post('/user-edit',(req,res)=>{
 	let id = req.body.id
+	let f_name = req.body.fname
+	let l_name = req.body.lname
 	let username = req.body.username
 	let password = req.body.password
 	let status = req.body.status
@@ -73,9 +93,11 @@ router.post('/user-edit',(req,res)=>{
 	let date_update = moment().format('YYYY-M-D H:m:s')
 
 	if (username&&password&&status&&email&&id) {
-		let sql = 'UPDATE data_user SET user_name = ?, user_pwd = ?, user_status = ?, user_email = ?, last_update = ? WHERE id = '+id
-		let value = [username,password,status,email,date_update]
+		let sql = 'UPDATE data_user SET first_name = ?, last_name = ?, user_name = ?, user_pwd = ?, user_status = ?, user_email = ?, last_update = ? WHERE id = '+id
+		let value = [f_name,l_name,username,password,status,email,date_update]
 		let update_data = {
+			first_name : f_name,
+			last_name : l_name,
 			username,
 			password,
 			status,

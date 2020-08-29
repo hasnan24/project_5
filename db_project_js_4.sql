@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 28, 2020 at 04:55 AM
+-- Generation Time: Aug 29, 2020 at 08:58 AM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 5.6.37
 
@@ -45,6 +45,8 @@ CREATE TABLE `data_inventory` (
 
 CREATE TABLE `data_user` (
   `id` int(11) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
   `user_name` varchar(255) NOT NULL,
   `user_pwd` varchar(255) NOT NULL,
   `user_status` varchar(255) NOT NULL,
@@ -57,8 +59,8 @@ CREATE TABLE `data_user` (
 -- Dumping data for table `data_user`
 --
 
-INSERT INTO `data_user` (`id`, `user_name`, `user_pwd`, `user_status`, `user_email`, `user_created_at`, `last_update`) VALUES
-(5, 'hasnan', '123qwe', 'superuser', 'hasnan@ola.com', '2020-08-27 13:56:39', '2020-08-27 13:56:39');
+INSERT INTO `data_user` (`id`, `first_name`, `last_name`, `user_name`, `user_pwd`, `user_status`, `user_email`, `user_created_at`, `last_update`) VALUES
+(5, '', '', 'hasnan', '123qwe', 'superuser', 'hasnan@ola.com', '2020-08-27 13:56:39', '2020-08-27 13:56:39');
 
 --
 -- Indexes for dumped tables
