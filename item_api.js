@@ -45,7 +45,7 @@ router.post('/item-add',(req,res)=>{
 		})
 	}else{
 		let response = {response : "Failed",
-		    			item_name,
+		    			Error : "Invalid Input",
 		    			action : "Add"}
 		res.json(response)
 	}
@@ -76,7 +76,7 @@ router.post('/item-edit',(req,res)=>{
 	    });
 	}else{
 		let response = {response : "Failed",
-		    			item_name,
+		    			Error : "Invalid Input",
 		    			action : "Update"}
 		res.json(response)
 	}
@@ -101,7 +101,7 @@ router.post('/item-delete',(req, res)=>{
 		});
 	}else {
 		let response = {response : "Failed",
-		    			id_item : id,
+		    			Error : "Invalid Input",
 		    			action : "Delete"}
 		res.json(response)
 	}

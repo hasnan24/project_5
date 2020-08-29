@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const moment = require('moment')
+const validator = require('validator')
 
 const database = require('./database')
 
@@ -32,24 +33,31 @@ router.post('/user-add',(req,res)=>{
 	let email = req.body.email
 	let date = moment().format('YYYY-M-D H:m:s')
 	if (username&&password&&status&&email) {
-		let sql = 'INSERT INTO data_user (user_name,user_pwd,user_status,user_email,user_created_at,last_update) VALUES ?'
-		let value = [[username,password,status,email,date,date]]
-		let json_data = {
-			username,
-			password,
-			status,
-			email,
-			date
-		}
+		if (validator.isAlphanumeric(username)) {
+			let sql = 'INSERT INTO data_user (user_name,user_pwd,user_status,user_email,user_created_at,last_update) VALUES ?'
+			let value = [[username,password,status,email,date,date]]
+			let json_data = {
+				username,
+				password,
+				status,
+				email,
+				date
+			}
 
-		database.query(sql,[value],(err,result)=>{
-			if (err) throw err;
-			console.log("Successfully Register "+username)
-			res.json(json_data)
-		})
+			database.query(sql,[value],(err,result)=>{
+				if (err) throw err;
+				console.log("Successfully Register "+username)
+				res.json(json_data)
+			})
+		}else{
+			let response = {response : "Failed",
+			    			error : "Username Can't input special characters",
+			    			action : "Register"}
+			res.json(response)
+		}
 	}else{
 		let response = {response : "Failed",
-		    			username,
+		    			Error : "Invalid Input",
 		    			action : "Register"}
 		res.json(response)
 	}
@@ -81,7 +89,7 @@ router.post('/user-edit',(req,res)=>{
 	    });
 	}else{
 		let response = {response : "Failed",
-		    			username,
+		    			Error : "Invalid Input",
 		    			action : "Update"}
 		res.json(response)
 	}
@@ -97,13 +105,13 @@ router.post('/user-delete',(req,res)=>{
 		    if (err) throw err;
 		    console.log("Successfully Delete "+username+" Data");
 		    let response = {response : "Success",
-		    			username,
-		    			action : "Delete"}
+			    			username,
+			    			action : "Delete"}
 		    res.json(response)
 		});
 	}else {
 		let response = {response : "Failed",
-		    			username,
+		    			Error : "Invalid Input",
 		    			action : "Delete"}
 		res.json(response)
 	}
